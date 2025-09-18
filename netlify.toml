@@ -1,0 +1,15 @@
+# Settings for deploying to Netlify
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Environment variables will be set in Netlify dashboard
+[build.environment]
+  NODE_VERSION = "20"
+
+# Handle client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
