@@ -37,7 +37,8 @@ const InventoryManager: React.FC = () => {
     const matchesSearch =
       part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       part.part_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      part.machine_type.toLowerCase().includes(searchTerm.toLowerCase());
+      part.machine_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      part.storage_location.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesFilter =
       filterCategory === "all" || part.category === filterCategory;
