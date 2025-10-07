@@ -33,18 +33,32 @@ const InventoryManager: React.FC = () => {
 
   const [showReport, setShowReport] = useState(false);
 
-  const filteredParts = parts.filter((part) => {
-    const matchesSearch =
-      part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      part.part_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      part.machine_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      part.storage_location.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filter and sort parts by storage_location (ascending, 1-01 on top)
+  const filteredParts = parts
+    .filter((part) => {
+      const matchesSearch =
+        part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        part.part_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        part.machine_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        part.storage_location.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesFilter =
-      filterCategory === "all" || part.category === filterCategory;
+      const matchesFilter =
+        filterCategory === "all" || part.category === filterCategory;
 
-    return matchesSearch && matchesFilter;
-  });
+      return matchesSearch && matchesFilter;
+    })
+    .sort((a, b) => {
+      // Custom sort: split by dash, compare numbers first, then string
+      const parseLoc = (loc) => {
+        if (!loc) return [Infinity, ""];
+        const [num, rest] = loc.split("-");
+        return [parseInt(num, 10) || 0, rest || ""];
+      };
+      const [aNum, aRest] = parseLoc(a.storage_location);
+      const [bNum, bRest] = parseLoc(b.storage_location);
+      if (aNum !== bNum) return aNum - bNum;
+      return aRest.localeCompare(bRest);
+    });
 
   const handleDeletePart = async (id: string) => {
     if (
@@ -219,6 +233,9 @@ const InventoryManager: React.FC = () => {
                 </p>
                 <p className="text-sm text-gray-600 mb-1">
                   Location: {part.storage_location}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  Description: {part.description}
                 </p>
 
                 {/* Stock Info */}
