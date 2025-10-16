@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSpareParts } from "../hooks/useSpareParts";
+import * as XLSX from "xlsx";
 import {
   Plus,
   Edit2,
@@ -11,6 +12,7 @@ import {
   ArrowUpCircle,
   ArrowDownCircle,
   FileText,
+  FileSpreadsheet,
 } from "lucide-react";
 import AddPartModal from "./AddPartModal";
 import EditPartModal from "./EditPartModal";
@@ -23,6 +25,52 @@ const InventoryManager: React.FC = () => {
   const [editingPart, setEditingPart] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
+
+  const exportToExcel = () => {
+    // Prepare data for export
+    const data = parts.map((part) => ({
+      "Part Code": part.part_code,
+      "Part Name": part.name,
+      Description: part.description || "",
+      "Machine Type": part.machine_type,
+      Category: part.category,
+      "Storage Location": part.storage_location,
+      "Quantity in Stock": part.quantity_in_stock,
+      "Minimum Stock Level": part.minimum_stock_level,
+      "Unit Price": part.unit_price,
+      "Total Value": part.unit_price * part.quantity_in_stock,
+      "Service Life (Months)": part.service_life_months,
+      "Stock Status":
+        part.quantity_in_stock <= 0
+          ? "Out of Stock"
+          : part.quantity_in_stock <= part.minimum_stock_level
+          ? "Low Stock"
+          : "In Stock",
+    }));
+
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    // Auto-fit column widths
+    const colWidths = Object.keys(data[0] || {}).map((key) => ({
+      wch: Math.max(
+        key.length,
+        ...data.map((row) => String(row[key as keyof typeof row]).length)
+      ),
+    }));
+    ws["!cols"] = colWidths;
+
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Spare Parts");
+
+    // Generate filename with current date
+    const date = new Date().toISOString().split("T")[0];
+    const fileName = `spare_parts_inventory_${date}.xlsx`;
+
+    // Save the file
+    XLSX.writeFile(wb, fileName);
+  };
   const [stockTransactionPart, setStockTransactionPart] = useState<{
     id: string;
     code: string;
@@ -49,7 +97,7 @@ const InventoryManager: React.FC = () => {
     })
     .sort((a, b) => {
       // Custom sort: split by dash, compare numbers first, then string
-      const parseLoc = (loc) => {
+      const parseLoc = (loc: string): [number, string] => {
         if (!loc) return [Infinity, ""];
         const [num, rest] = loc.split("-");
         return [parseInt(num, 10) || 0, rest || ""];
@@ -141,6 +189,14 @@ const InventoryManager: React.FC = () => {
           >
             <FileText className="h-5 w-5 mr-2" />
             Stock Report
+          </button>
+          <button
+            onClick={exportToExcel}
+            disabled={loading}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <FileSpreadsheet className="h-5 w-5 mr-2" />
+            Export to Excel
           </button>
           <button
             onClick={() => setShowAddModal(true)}
