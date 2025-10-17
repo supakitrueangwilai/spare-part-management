@@ -29,6 +29,7 @@ const StockTransactionModal: React.FC<StockTransactionModalProps> = ({
     machine_id: "",
     operator_name: "",
     notes: "",
+    transaction_date: new Date().toISOString().split("T")[0], // Default to current date
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,6 +72,8 @@ const StockTransactionModal: React.FC<StockTransactionModalProps> = ({
           machine_id: formData.machine_id,
           operator_name: formData.operator_name,
           notes: formData.notes,
+          transaction_date: formData.transaction_date,
+          created_at: new Date().toISOString(), // Actual timestamp when the record is created
         });
 
       if (transactionError) throw transactionError;
@@ -82,6 +85,7 @@ const StockTransactionModal: React.FC<StockTransactionModalProps> = ({
         machine_id: "",
         operator_name: "",
         notes: "",
+        transaction_date: new Date().toISOString().split("T")[0],
       });
     } catch (error) {
       console.error("Error processing transaction:", error);
@@ -134,6 +138,20 @@ const StockTransactionModal: React.FC<StockTransactionModalProps> = ({
                 <p className="text-sm text-gray-600">
                   Current Stock: {currentStock}
                 </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Transaction Date *
+                </label>
+                <input
+                  type="date"
+                  name="transaction_date"
+                  value={formData.transaction_date}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
               </div>
 
               <div>
