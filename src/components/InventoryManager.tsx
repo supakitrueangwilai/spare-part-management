@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSpareParts } from "../hooks/useSpareParts";
+import { useUserRole } from "../hooks/useUserRole";
 import * as XLSX from "xlsx";
 import {
   Plus,
@@ -21,6 +22,7 @@ import TransactionReport from "./TransactionReport";
 
 const InventoryManager: React.FC = () => {
   const { parts, loading, error, deletePart } = useSpareParts();
+  const { role, isAdmin } = useUserRole();
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingPart, setEditingPart] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -183,6 +185,7 @@ const InventoryManager: React.FC = () => {
           </p>
         </div>
         <div className="flex space-x-4">
+          {/* Stock Report - สำหรับทุกคน */}
           <button
             onClick={() => setShowReport(true)}
             className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
@@ -190,6 +193,8 @@ const InventoryManager: React.FC = () => {
             <FileText className="h-5 w-5 mr-2" />
             Stock Report
           </button>
+
+          {/* Export to Excel - สำหรับทุกคน */}
           <button
             onClick={exportToExcel}
             disabled={loading}
@@ -198,13 +203,17 @@ const InventoryManager: React.FC = () => {
             <FileSpreadsheet className="h-5 w-5 mr-2" />
             Export to Excel
           </button>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            Add New Part
-          </button>
+
+          {/* Add New Part - สำหรับ Admin เท่านั้น */}
+          {isAdmin && (
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Add New Part
+            </button>
+          )}
         </div>
       </div>
 
@@ -367,22 +376,24 @@ const InventoryManager: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Edit/Delete Actions */}
-                <div className="flex space-x-2 mt-2">
-                  <button
-                    onClick={() => setEditingPart(part.id)}
-                    className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-                  >
-                    <Edit2 className="h-4 w-4 mr-1" />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeletePart(part.id)}
-                    className="bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
+                {/* Edit/Delete Actions - แสดงเฉพาะ Admin */}
+                {isAdmin && (
+                  <div className="flex space-x-2 mt-2">
+                    <button
+                      onClick={() => setEditingPart(part.id)}
+                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-3 rounded-lg font-medium transition-colors flex items-center justify-center"
+                    >
+                      <Edit2 className="h-4 w-4 mr-1" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeletePart(part.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded-lg font-medium transition-colors flex items-center justify-center"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           );
