@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import UpdateStockModal from "./UpdateStockModal";
 import AddPartModal from "./AddPartModal";
-import AlertsNotifications from "./AlertsNotifications";
 
 interface DashboardStats {
   totalParts: number;
@@ -136,8 +135,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Alerts & Notifications */}
-      <AlertsNotifications />
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
