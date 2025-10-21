@@ -29,6 +29,8 @@ function App() {
     switch (activeTab) {
       case "dashboard":
         return <Dashboard />;
+      case "alerts":
+        return <AlertsNotifications />;
       case "inventory":
         return <InventoryManager />;
       case "search":
@@ -41,11 +43,6 @@ function App() {
               Advanced search functionality will be available here.
             </p>
           </div>
-        );
-      case "alerts":
-        return (
-                case 'alerts':
-        return <AlertsNotifications />;
         );
       case "history":
         return (
