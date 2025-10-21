@@ -1,17 +1,17 @@
-import React from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { signOut } from '../lib/supabase';
-import { 
-  Package, 
-  Search, 
-  Bell, 
-  History, 
-  BarChart3, 
+import React from "react";
+import { useAuth } from "../hooks/useAuth";
+import { signOut } from "../lib/supabase";
+import {
+  Package,
+  Search,
+  Bell,
+  History,
+  BarChart3,
   Settings,
   LogOut,
   Menu,
-  X
-} from 'lucide-react';
+  X,
+} from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,7 +19,11 @@ interface LayoutProps {
   onTabChange: (tab: string) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => {
+const Layout: React.FC<LayoutProps> = ({
+  children,
+  activeTab,
+  onTabChange,
+}) => {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
@@ -28,29 +32,31 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => 
   };
 
   const navigation = [
-    { id: 'dashboard', name: 'Dashboard', icon: BarChart3 },
-    { id: 'inventory', name: 'Inventory', icon: Package },
-    { id: 'search', name: 'Search Parts', icon: Search },
-    { id: 'alerts', name: 'Alerts', icon: Bell },
-    { id: 'history', name: 'Maintenance Log', icon: History },
-    { id: 'settings', name: 'Settings', icon: Settings },
+    { id: "dashboard", name: "Dashboard", icon: BarChart3 },
+    { id: "alerts", name: "Alerts", icon: Bell },
+    { id: "inventory", name: "Inventory", icon: Package },
+    { id: "search", name: "Search Parts", icon: Search },
+    { id: "history", name: "Maintenance Log", icon: History },
+    { id: "settings", name: "Settings", icon: Settings },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <div className={`
+      <div
+        className={`
         fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
+      >
         <div className="flex items-center justify-between h-16 px-6 bg-slate-900">
           <h1 className="text-xl font-bold text-white">Parts Manager</h1>
           <button
@@ -60,7 +66,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => 
             <X className="h-6 w-6" />
           </button>
         </div>
-        
+
         <nav className="mt-8">
           {navigation.map((item) => (
             <button
@@ -71,9 +77,10 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => 
               }}
               className={`
                 w-full flex items-center px-6 py-3 text-left text-sm font-medium transition-colors
-                ${activeTab === item.id 
-                  ? 'bg-blue-600 text-white border-r-2 border-orange-400' 
-                  : 'text-gray-300 hover:bg-slate-700 hover:text-white'
+                ${
+                  activeTab === item.id
+                    ? "bg-blue-600 text-white border-r-2 border-orange-400"
+                    : "text-gray-300 hover:bg-slate-700 hover:text-white"
                 }
               `}
             >
@@ -109,7 +116,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => 
             >
               <Menu className="h-6 w-6" />
             </button>
-            
+
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
                 Industrial Parts Management System
@@ -119,9 +126,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => 
         </div>
 
         {/* Page content */}
-        <main className="p-6">
-          {children}
-        </main>
+        <main className="p-6">{children}</main>
       </div>
     </div>
   );
