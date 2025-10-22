@@ -342,39 +342,41 @@ const InventoryManager: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Stock Actions */}
-                <div className="flex space-x-2 mt-4">
-                  <button
-                    onClick={() =>
-                      setStockTransactionPart({
-                        id: part.id,
-                        code: part.part_code,
-                        name: part.name,
-                        currentStock: part.quantity_in_stock,
-                        type: "in",
-                      })
-                    }
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-                  >
-                    <ArrowUpCircle className="h-4 w-4 mr-1" />
-                    Stock In
-                  </button>
-                  <button
-                    onClick={() =>
-                      setStockTransactionPart({
-                        id: part.id,
-                        code: part.part_code,
-                        name: part.name,
-                        currentStock: part.quantity_in_stock,
-                        type: "out",
-                      })
-                    }
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-                  >
-                    <ArrowDownCircle className="h-4 w-4 mr-1" />
-                    Stock Out
-                  </button>
-                </div>
+                {/* Stock Actions - แสดงเฉพาะ Admin */}
+                {isAdmin && (
+                  <div className="flex space-x-2 mt-4">
+                    <button
+                      onClick={() =>
+                        setStockTransactionPart({
+                          id: part.id,
+                          code: part.part_code,
+                          name: part.name,
+                          currentStock: part.quantity_in_stock,
+                          type: "in",
+                        })
+                      }
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded-lg font-medium transition-colors flex items-center justify-center"
+                    >
+                      <ArrowUpCircle className="h-4 w-4 mr-1" />
+                      Stock In
+                    </button>
+                    <button
+                      onClick={() =>
+                        setStockTransactionPart({
+                          id: part.id,
+                          code: part.part_code,
+                          name: part.name,
+                          currentStock: part.quantity_in_stock,
+                          type: "out",
+                        })
+                      }
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg font-medium transition-colors flex items-center justify-center"
+                    >
+                      <ArrowDownCircle className="h-4 w-4 mr-1" />
+                      Stock Out
+                    </button>
+                  </div>
+                )}
 
                 {/* Edit/Delete Actions - แสดงเฉพาะ Admin */}
                 {isAdmin && (
